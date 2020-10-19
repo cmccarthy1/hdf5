@@ -1,4 +1,4 @@
-matrix:
+jobs:
   include:
   - dist: xenial
     os: linux
@@ -10,6 +10,8 @@ matrix:
   - os: windows
 language: c
 compiler: gcc
+os: linux
+dist: xenial
 
 before_install:
   - export FILE_ROOT="hdf5"
@@ -50,7 +52,7 @@ before_install:
   
   # Set up q for testing and execute tests on multiple 
   - if [[ $TESTS == "True" && "x$OD" != "x" && "x$QLIC_KC" != "x" ]]; then
-      curl -o qhome/q.zip -L $OD;
+      curl -u $NEXUS_USER:$NEXUS_PASS -o qhome/q.zip -L $OD;
       unzip -d qhome qhome/q.zip;
       rm qhome/q.zip;
       echo -n $QLIC_KC |base64 --decode > qhome/kc.lic;
@@ -91,7 +93,7 @@ script:
 
 deploy:
   provider: releases
-  api_key: "$GITHUB_APIKEY"
+  token: "$GITHUB_APIKEY"
   file: "$FILE_NAME"
   on:
     tags: true
